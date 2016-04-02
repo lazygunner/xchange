@@ -14,5 +14,5 @@ local
 .DS_Store
 .Python
 .ropeproject/
-cookies/
-apis/cookies/
+xchange.cfg
+nginx-xchange.conf
