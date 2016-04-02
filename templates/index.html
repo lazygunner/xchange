@@ -1,28 +1,62 @@
 <!DOCTYPE html>
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<link href="../static/css/flag-icon.css" rel="stylesheet">
+
 <html lang="en">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <head>
         <title>准实时汇率计算</title>
     </head>
     <body>
-        <input class='source' type='text'></input>
-        <form id="rateForm">
+        <h2 style="margin-left:auto;margin-right:auto;width:230px;margin-top:20px;color:purple">准实时汇率计算</h2>
+        <div>
+            <label style="margin-top:30px">1.输入待换算金额:</label>
+            <div class="input-group" style="width:70%;margin-left:auto;margin-right:auto">
+            <input type="text" class="form-control" id="source" style=placeholder="待换算金额...">
+            <span class="input-group-btn">
+                <button class="btn btn-danger" type="button" id="clear">清空</button>
+            </span>
+            </div><!-- /input-group -->
+        </div><!-- /.row -->        
+        <label style="margin-top:30px">2.选择币种:</label>
+        <form id="rateForm" style="width: 70%;margin-left:auto;margin-right:auto;">
         {% for rate in rate_dict.values() %}
-        <input type="radio" name="rate" value="{{ rate.rate }}" /> {{ rate.name }} 汇率: {{ rate.rate}} 更新时间: {{ rate.time }}<br />
+            <input type="radio" name="rate" value="{{ rate.rate }}" />
+            <span class="flag-icon flag-icon-{{ rate.item_id|lower|truncate(2,end='') }}"></span>
+            <span >{{ rate.name }}</span>
+            <label style="margin-left:10px" class="bg-info">{{ rate.rate}}</label>
+            <span style="float:right">update: {{ rate.time.strftime('%m-%d %H:%M') }}</span>
+            <br /></br>
         {% endfor %}
         </form>
-        <button class='calc'>计算</button>
-        <div>
-            <label>结果: ￥</label><span class='result'></span>
+        <div style="margin-left:auto;margin-right:auto;width:100px;margin-top:20px">
+            <button class="btn btn-success" id='calc' >计算</button>
+        </div>
+        <div style: "margin-top:30px">
+            <label>3.计算结果: </label>
+            <h1 class="bg-warning" id='result' style="width:50%;margin-left:auto;margin-right:auto"></h1>
         </div>
     </body>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script>
         $(document).ready(function(){
-            $(".calc").click(function(){
+            $("#clear").click(function(){
+                $("#source").val("");
+                $("#result").text("");
+            })
+
+            $("#calc").click(function(){
                 var rate = $('input[name=rate]:checked', '#rateForm').val();
-                var source = $(".source").val()
+                var source = $("#source").val()
                 if (source) {
-                    $(".result").text((parseFloat(rate) * parseFloat(source)).toFixed(4));
+                    var result = (parseFloat(rate) * parseFloat(source)).toFixed(4);
+                    var resultStr = "¥" + result;
+                    $("#result").text(resultStr);
                 }
 
             });
