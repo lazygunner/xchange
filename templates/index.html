@@ -14,52 +14,69 @@
         <title>准实时汇率计算</title>
     </head>
     <body>
-        <h2 style="margin-left:auto;margin-right:auto;width:230px;margin-top:20px;color:purple">准实时汇率计算</h2>
+        <h2 style="width:120px;margin-left:auto;margin-right:auto;margin-top:20px;color:pink">汇率计算</h2>
+        <form id="rateForm" style="width: 70%;margin-left:auto;margin-right:auto;margin-top:20px">
+            <div class="row">
+            {% for rate in rate_dict.values() %}
+            <div class="col-xs-3 bg-warning">
+                <input type="radio" name="rate" id="{{ rate.item_id }}" value="{{ rate.rate }}" />
+                <span class="flag-icon flag-icon-{{ rate.item_id|lower|truncate(2,end='') }}"></span>
+            </div>
+            {% endfor %}
+            </div>
+        </form>
+
         <div>
-            <label style="margin-top:10px">1.输入待换算金额:</label>
-            <div class="input-group" style="width:70%;margin-left:auto;margin-right:auto">
-            <input type="text" class="form-control" id="source" style=placeholder="待换算金额...">
-            <span class="input-group-btn">
-                <button class="btn btn-danger" type="button" id="clear">清空</button>
-            </span>
+            <div class="row" style="width:70%;margin-left:auto;margin-right:auto;margin-top:20px">
+            <div class="col-xs-6">
+                <input type="text" class="form-control col-xs-6" id="source" style=placeholder="待换算金额...">
+            </div>
+            <div class="col-xs-6" style="font-size:150%">
+                <label class="label label-danger" id="result"></label>
+            </div>
             </div><!-- /input-group -->
         </div><!-- /.row -->        
-        <label style="margin-top:10px">2.选择币种:</label>
-        <form id="rateForm" style="width: 70%;margin-left:auto;margin-right:auto;">
-        {% for rate in rate_dict.values() %}
-            <input type="radio" name="rate" value="{{ rate.rate }}" />
+        <div style="width: 70%;margin-left:auto;margin-right:auto;margin-top:40px">
+            <h3>详细数据</h3>
+            {% for rate in rate_dict.values() %}
             <span class="flag-icon flag-icon-{{ rate.item_id|lower|truncate(2,end='') }}"></span>
             <span >{{ rate.name }}</span>
             <label style="margin-left:10px" class="bg-info">{{ rate.rate}}</label>
             <span style="float:right">update: {{ rate.time.strftime('%m-%d %H:%M') }}</span>
             <br /></br>
-        {% endfor %}
-        </form>
-        <div style="margin-left:auto;margin-right:auto;width:100px;">
-            <button class="btn btn-success" id='calc' >计算</button>
-        </div>
-        <div style: "margin-top:30px">
-            <label>3.计算结果: </label>
-            <h1 class="bg-warning" id='result' style="width:50%;margin-left:auto;margin-right:auto"></h1>
+            {% endfor %}
         </div>
     </body>
     <script>
         $(document).ready(function(){
+            var calc = function() {
+                var rate = $('input[name=rate]:checked', '#rateForm').val();
+                var source = $("#source").val()
+                if (!source) {
+                    source = 0
+                }
+                var result = (parseFloat(rate) * parseFloat(source)).toFixed(4);
+                var resultStr = "¥ " + result;
+                $("#result").text(resultStr);
+           
+            
+            }
+            $("#JPYCNY").attr('checked', 'checked');
             $("#clear").click(function(){
                 $("#source").val("");
                 $("#result").text("");
             })
 
-            $("#calc").click(function(){
-                var rate = $('input[name=rate]:checked', '#rateForm').val();
-                var source = $("#source").val()
-                if (source) {
-                    var result = (parseFloat(rate) * parseFloat(source)).toFixed(4);
-                    var resultStr = "¥" + result;
-                    $("#result").text(resultStr);
-                }
-
+            $('#rateForm input').on('change', function() {
+                calc();
             });
+
+            $("#source").keyup(function(){
+                calc();          
+            })
+
+            calc();
+
         });
     </script>
 </html>
