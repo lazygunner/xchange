@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>准实时汇率计算</title>
+    </head>
+    <body>
+        <input class='source' type='text'></input>
+        <form id="rateForm">
+        {% for rate in rate_dict.values() %}
+        <input type="radio" name="rate" value="{{ rate.rate }}" /> {{ rate.name }} 汇率: {{ rate.rate}} 更新时间: {{ rate.time }}<br />
+        {% endfor %}
+        </form>
+        <button class='calc'>计算</button>
+        <div>
+            <label>结果: ￥</label><span class='result'></span>
+        </div>
+    </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $(".calc").click(function(){
+                var rate = $('input[name=rate]:checked', '#rateForm').val();
+                var source = $(".source").val()
+                if (source) {
+                    $(".result").text((parseFloat(rate) * parseFloat(source)).toFixed(4));
+                }
+
+            });
+        });
+    </script>
+</html>

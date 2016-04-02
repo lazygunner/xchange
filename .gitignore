@@ -1,0 +1,18 @@
+# Python:
+*.py[cod]
+*.so
+*.egg
+*.egg-info
+*.log
+*.out
+dist
+build
+bin
+lib
+include
+local
+.DS_Store
+.Python
+.ropeproject/
+cookies/
+apis/cookies/
