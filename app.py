@@ -14,10 +14,9 @@ def xchange():
     rate_dict = {}
     for item in app.config['ITEM_LIST']:
         id = item['id']
-        rate = mongo.xchange.xchange.find({'item_id': id}).sort('-time')[0]
+        rate = mongo.xchange.xchange.find({'item_id': id}).sort('time', -1)[0]
         rate_dict[id] = rate
 
-    print rate_dict
     return render_template('index.html', rate_dict=rate_dict)
 
 if __name__ == '__main__':
